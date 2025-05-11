@@ -31,12 +31,12 @@ print(grafserie)
 
 # DADOS EM PAINEL
 
-GRAF.AFF. <- ggplot(Agr.for.fish., 
+Graf.Agr.for.fish. <- ggplot(Agr.for.fish., 
                      mapping = aes(y = NV.AGR.TOTL.ZS, 
                                    x = year)) + 
-  geom_point()  
+  geom_point() 
 
-print(GRAF.AFF.)  
+print(Graf.Agr.for.fish.)  
 
 # CORTE TRANSVERSAL
 
@@ -52,6 +52,6 @@ print(GRAF.AFF.2022)
 GRAF.AFF.RF <- ggplot(Agr.for.fish.RF, 
                     mapping = aes(y = NV.AGR.TOTL.ZS, 
                                   x = year)) + 
-  geom_line() 
+  geom_line()  
 
-print(GRAF.AFF.RF) 
+print(GRAF.AFF.RF)  
