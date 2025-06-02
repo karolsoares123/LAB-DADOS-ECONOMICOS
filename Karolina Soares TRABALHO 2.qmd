@@ -1,0 +1,85 @@
+---
+title: "Karolina Soares"
+format: html
+editor: visual
+---
+
+```{r}
+#| label: load-packages #nomes únicos
+#| include: false # não inclui o resultado no doc
+
+
+library(GetBCBData)  
+library(tidyverse) # TAMBÉM É NECESSÁRIO
+
+my.id <- c(PIB = 24326) 
+
+df.bcb <- gbcbd_get_series(id = my.id ,
+                           first.date = '2002-01-01',
+                           last.date = Sys.Date(),
+                           format.data = 'long',
+                           use.memoise = TRUE, 
+                           cache.path = tempdir(), # use tempdir for cache folder
+                           do.parallel = FALSE) 
+
+glimpse(df.bcb) 
+
+```
+
+## PIB - variação anual real
+
+É um indicador econômico que mede a mudança percentual no **Produto Interno Bruto (PIB)** de um país em um ano em relação ao ano anterior, **ajustado pela inflação** (ou seja, em termos reais). Ele reflete o crescimento (ou contração) da economia, descontando os efeitos da variação de preços.
+
+## Gráfico Representativo Da Variação Anual do PIB
+
+-   Se a linha sobe (valores positivos), a economia está crescendo.
+
+-   Se desce (valores negativos), está em contração.
+
+```{r}
+#| label: dadosempainel
+#| warning: false
+#| echo: false
+
+if (!require(ggplot2)) install.packages("ggplot2") 
+if (!require(gganimate)) install.packages("gganimate") 
+if (!require(dplyr)) install.packages("dplyr") 
+
+library(ggplot2) 
+library(gganimate)  
+library(dplyr) 
+
+# Garantir que os dados estão limpos e ordenados
+df.bcb <- df.bcb %>% 
+  na.omit() %>%
+  arrange(ref.date) 
+
+# Criar a animação
+animacao_pib <- ggplot(df.bcb, aes(x = ref.date, y = value)) +
+  geom_line(color = "steelblue", linewidth = 1.2) +
+  geom_point(color = "#4682B4", size = 3) +
+  labs(
+    title = "PIB - Variação Anual Real",
+    subtitle = "Período: {format(min(df.bcb$ref.date), '%Y')} a {frame_along}",
+    x = "",
+    y = "Variação anual em %",
+    caption = "Fonte: Banco Central do Brasil"
+  ) +
+  theme_light(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 16),
+    axis.title.y = element_text(margin = margin(r = 10))
+  ) +
+  transition_reveal(ref.date) +
+  ease_aes('linear') +
+  enter_fade() +
+  exit_shrink() 
+
+animacao_pib
+
+```
+
+```{}
+```
+
+## 
